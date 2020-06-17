@@ -9,6 +9,7 @@ function App() {
 
   useEffect(() => {
     api.get('/repositories').then(response => {
+      console.log('useeffect-->', response)
       setRepositories(response.data);
     })
   }, []);
@@ -20,6 +21,7 @@ function App() {
       url :  `http://www.${Date.now()}.com`,
       techs: ['Shell','PHP','Python', 'Javascript']
     })
+
     const repository = response.data;
 
     setRepositories([...repositories, repository])
@@ -27,9 +29,13 @@ function App() {
 
   async function handleRemoveRepository(id) {
 
-    await api.delete(`repositories/${id}`);
+    const repositoryFiltred = repositories.filter(repository => repository.id !== id);
 
-    setRepositories(repositories.filter(repository => repository.id !== id));
+    await api.delete(`repositories/${id}`)
+      .then((response) => {
+        if (response.status === 204) setRepositories(repositoryFiltred);
+      })
+      .catch((error) => console.log(error));;
   }
     
   return (
