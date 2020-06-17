@@ -9,7 +9,6 @@ function App() {
 
   useEffect(() => {
     api.get('/repositories').then(response => {
-      console.log('useeffect-->', response)
       setRepositories(response.data);
     })
   }, []);
